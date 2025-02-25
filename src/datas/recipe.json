@@ -1,0 +1,235 @@
+[
+  {
+    "recipeData": {
+      "title": "Spicy Vinegar Sauce",
+      "description": "A tangy and spicy condiment perfect for marinades, dips, or dressings.",
+      "cuisineType": "Fusion",
+      "preparationTime": 5,
+      "cookingMethod": "Mixing",
+      "difficultyLevel": "Easy",
+      "calorieCount": 10,
+      "source": "System"
+    },
+    "ingredientsUsed": [
+      {
+        "ingredientId": 1,
+        "quantity": "5 pieces (crushed)",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 2,
+        "quantity": "½ cup",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 3,
+        "quantity": "½ teaspoon",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 4,
+        "quantity": "¼ cup",
+        "isRequired": true
+      }
+    ],
+    "preparationStepsIncluded": [
+      {
+        "stepNo": 1,
+        "stepDescription": "In a bowl, mix crushed Red Chilly, Vinegar, Salt, and Water.",
+        "ingredientsUsed": [
+          {
+            "ingredientId": 1,
+            "quantity": "5 pieces (crushed)",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 2,
+            "quantity": "½ cup",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 3,
+            "quantity": "½ teaspoon",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 4,
+            "quantity": "¼ cup",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "stepNo": 2,
+        "stepDescription": "Stir Well. Ensure the salt dissolves completely and the flavors blend together.",
+        "ingredientsUsed": []
+      },
+      {
+        "stepNo": 3,
+        "stepDescription": "Allow the sauce to sit for at least 10 minutes to enhance the flavors.",
+        "ingredientsUsed": []
+      },
+      {
+        "stepNo": 4,
+        "stepDescription": "Use immediately or store in an airtight container for up to a week in the refrigerator.",
+        "ingredientsUsed": []
+      }
+    ]
+  },
+  {
+    "recipeData": {
+      "title": "Spicy Pickled Chilies",
+      "description": "A zesty and fiery condiment to spice up your meals.",
+      "cuisineType": "Asian",
+      "preparationTime": 10,
+      "cookingMethod": "Pickling",
+      "difficultyLevel": "Easy",
+      "calorieCount": 5,
+      "source": "System"
+    },
+    "ingredientsUsed": [
+      {
+        "ingredientId": 1,
+        "quantity": "10 pieces (sliced)",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 2,
+        "quantity": "½ cup",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 3,
+        "quantity": "1 teaspoon",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 4,
+        "quantity": "¼ cup",
+        "isRequired": true
+      }
+    ],
+    "preparationStepsIncluded": [
+      {
+        "stepNo": 1,
+        "stepDescription": "Slice the Red Chilies into thin rounds and place them in a sterilized jar.",
+        "ingredientsUsed": [
+          {
+            "ingredientId": 1,
+            "quantity": "10 pieces (sliced)",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "stepNo": 2,
+        "stepDescription": "In a saucepan, heat Vinegar, Salt, and Water until the salt dissolves completely.",
+        "ingredientsUsed": [
+          {
+            "ingredientId": 2,
+            "quantity": "½ cup",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 3,
+            "quantity": "1 teaspoon",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 4,
+            "quantity": "¼ cup",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "stepNo": 3,
+        "stepDescription": "Pour the hot pickling liquid over the chilies in the jar.",
+        "ingredientsUsed": []
+      },
+      {
+        "stepNo": 4,
+        "stepDescription": "Let the jar sit at room temperature for 24 hours before using. Store in the refrigerator for up to a month.",
+        "ingredientsUsed": []
+      }
+    ]
+  },
+  {
+    "recipeData": {
+      "title": "Spicy Tangy Dressing",
+      "description": "A flavorful dressing for salads, tacos, or grilled vegetables.",
+      "cuisineType": "Fusion",
+      "preparationTime": 5,
+      "cookingMethod": "Mixing",
+      "difficultyLevel": "Easy",
+      "calorieCount": 15,
+      "source": "System"
+    },
+    "ingredientsUsed": [
+      {
+        "ingredientId": 1,
+        "quantity": "2 pieces (finely chopped)",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 2,
+        "quantity": "2 tablespoons",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 3,
+        "quantity": "½ teaspoon",
+        "isRequired": true
+      },
+      {
+        "ingredientId": 4,
+        "quantity": "1 tablespoon",
+        "isRequired": true
+      }
+    ],
+    "preparationStepsIncluded": [
+      {
+        "stepNo": 1,
+        "stepDescription": "Finely chop the Red Chilies and add them to a small bowl.",
+        "ingredientsUsed": [
+          {
+            "ingredientId": 1,
+            "quantity": "2 pieces (finely chopped)",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "stepNo": 2,
+        "stepDescription": "Add Vinegar, Salt, and Water to the bowl and mix well.",
+        "ingredientsUsed": [
+          {
+            "ingredientId": 2,
+            "quantity": "2 tablespoons",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 3,
+            "quantity": "½ teaspoon",
+            "isRequired": true
+          },
+          {
+            "ingredientId": 4,
+            "quantity": "1 tablespoon",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "stepNo": 3,
+        "stepDescription": "Let the dressing sit for 5 minutes to allow flavors to blend.",
+        "ingredientsUsed": []
+      },
+      {
+        "stepNo": 4,
+        "stepDescription": "Use immediately or store in an airtight container in the refrigerator for up to a week.",
+        "ingredientsUsed": []
+      }
+    ]
+  }
+]
