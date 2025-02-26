@@ -1,0 +1,123 @@
+enum receipe_source {
+  System
+  User
+  AI
+}
+
+table ingredients {
+  id serial [pk, not null, increment]
+  name varchar(255) [not null, unique]
+  image varchar(255)
+
+  indexes {
+    name [name: 'name_index']
+  }
+}
+
+table ingredients_used_in_prep_step {
+  id serial [not null, increment]
+  preparation_step_id integer [not null]
+  ingredient_id integer [not null]
+  quantity text
+  is_required boolean [not null, default: false]
+
+  indexes {
+    (preparation_step_id, ingredient_id) [pk]
+  }
+}
+
+table preparation_steps {
+  id serial [pk, not null, increment]
+  recipe_id integer [not null]
+  step_no integer [not null]
+  step_description text [not null]
+
+  indexes {
+    recipe_id [name: 'prep_steps_recipe_idx']
+  }
+}
+
+table recipe_ingredients {
+  id serial [not null, increment]
+  recipe_id integer [not null]
+  ingredient_id integer [not null]
+  quantity text
+  is_required boolean [not null, default: false]
+
+  indexes {
+    (recipe_id, ingredient_id) [pk]
+  }
+}
+
+table recipes {
+  id serial [pk, not null, increment]
+  title text [not null]
+  description text
+  image_url text
+  cuisine_type text
+  preparation_time integer
+  cooking_method text
+  difficulty_level text
+  calorie_count integer
+  created_by integer
+  receipe_source receipe_source [not null, default: 'System']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+
+  indexes {
+    title [name: 'title_index']
+  }
+}
+
+table reviews {
+  id serial [not null, increment]
+  recipe_id integer [not null]
+  user_id integer [not null]
+  rating integer [not null]
+  review_text text
+  created_at timestamp [default: `now()`]
+
+  indexes {
+    (user_id, recipe_id) [pk]
+  }
+}
+
+table saved_recipes {
+  id serial [not null, increment]
+  user_id integer [not null]
+  recipe_id integer [not null]
+
+  indexes {
+    (user_id, recipe_id) [pk]
+  }
+}
+
+table users {
+  id serial [pk, not null, increment]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  password varchar(255) [not null]
+  avatar varchar(255)
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+}
+
+ref: ingredients_used_in_prep_step.preparation_step_id > preparation_steps.id
+
+ref: ingredients_used_in_prep_step.ingredient_id > ingredients.id
+
+ref: preparation_steps.recipe_id > recipes.id
+
+ref: recipe_ingredients.recipe_id > recipes.id
+
+ref: recipe_ingredients.ingredient_id > ingredients.id
+
+ref: recipes.created_by > users.id
+
+ref: reviews.user_id > users.id
+
+ref: reviews.recipe_id > recipes.id
+
+ref: saved_recipes.user_id > users.id
+
+ref: saved_recipes.recipe_id > recipes.id
