@@ -35,6 +35,8 @@ export const typeDefs = gql`
     preparationSteps: [PreparationStep]
     reviews: [Review]
     averageRating: Float
+    matchPercentage: Float
+    matchingIngredientsCount: Int
     createdAt: String
     updatedAt: String
   }
@@ -89,6 +91,7 @@ export const typeDefs = gql`
   type Query {
     hello: String
     getUsersDataById(id: ID!): UsersData
+    searchRecipesByIngredients(input: SearchRecipesInput!): [Recipe]
   }
     
   type Mutation {
@@ -144,6 +147,13 @@ export const typeDefs = gql`
   input NewIngredientInput {
     name: String!
     image: String
+  }
+
+  input SearchRecipesInput {
+    ingredients: [String!]
+    title: String
+    pageSize: Int
+    page: Int
   }
 
 `;

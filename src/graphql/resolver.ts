@@ -18,6 +18,17 @@ export const resolvers = {
         throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
       }
     },
+    searchRecipesByIngredients: async (_: any, { input }: { input: { ingredients?: string[], title?: string, page?: number, pageSize?: number } }) => {
+      try {
+        const {ingredients, title, page, pageSize} =input;
+        const recipes = await dbService.Receipe.searchRecipesByIngredients(ingredients, title, page, pageSize);
+        console.log("recipes-->", recipes);
+        // return "success fetching recipes by ingredients";
+        return recipes;
+      } catch (error: any) {
+        throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
+      }
+    },
   },
   Mutation: {
     registerUser: async (_: any, { userInput }: { userInput: RegisterUser }) => {

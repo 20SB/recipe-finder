@@ -1,7 +1,6 @@
 // \src\models\schema.ts
 import { boolean, index, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { ReceipeSources } from "../helpers/enums";
-// import * as tableRelations from "./relations";
 import { relations } from "drizzle-orm";
 
 // Enum for recipe sources
