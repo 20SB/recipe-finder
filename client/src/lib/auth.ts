@@ -15,8 +15,8 @@ export const setToken = (token: string, expiryInHours: number = 24) => {
 };
 
 // ✅ Get Token from Cookie
-export const getToken = (): string | undefined => {
-  return Cookies.get(TOKEN_KEY);
+export const getToken = (): string | null => {
+  return Cookies.get(TOKEN_KEY) || null;
 };
 
 // ✅ Remove Token (Logout)

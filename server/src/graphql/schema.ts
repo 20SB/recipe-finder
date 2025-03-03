@@ -90,7 +90,7 @@ export const typeDefs = gql`
 
   type Query {
     hello: String
-    getUsersDataById(id: ID!): UsersData
+    getUsersDataById(id: ID): UsersData
     searchRecipesByIngredients(input: SearchRecipesInput!): [Recipe]
   }
     

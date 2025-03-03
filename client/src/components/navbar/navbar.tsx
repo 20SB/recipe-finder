@@ -7,22 +7,37 @@ import SearchModal from "./SearchModal";
 import ProfileMenu from "./profileMenu";
 import Link from "next/link";
 import { getToken } from "@/lib/auth";
+import { fetchUserDataById } from "@/graphQlQueries/method";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true); // State to manage loading state
+  const [user, setUser] = useState<{ name: string; avatar: string } | null>(null);
+  const [savedRecipes, setSavedRecipes] = useState([]);
 
   useEffect(() => {
-    const token: string = getToken() || "";
+    const token = getToken();
     setToken(token);
-    setLoading(false); 
+    if (token) {
+      fetchUserDataById(token, null).then((userData) => {
+        console.log("userData------:", userData);
+        setUser(userData.user);
+        setSavedRecipes(userData.savedRecipes);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-//   if (loading) {
-//     return <div>Loading...</div>; 
-//   }
+  console.log("user:", user);
+  console.log("savedRecipes:", savedRecipes);
+
+  //   if (loading) {
+  //     return <div>Loading...</div>;
+  //   }
 
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-white shadow-md">
@@ -42,7 +57,9 @@ const Navbar = () => {
 
       {/* Right Section: Conditional Rendering based on Token */}
       <div className="hidden lg:flex items-center gap-4">
-        {loading ? "" : token ? (
+        {loading ? (
+          ""
+        ) : token ? (
           <ProfileMenu user={{ name: "John Doe", avatar: "https://via.placeholder.com/150" }} />
         ) : (
           <Button variant="default">
@@ -58,7 +75,9 @@ const Navbar = () => {
             <LucideSearch className="text-gray-500" size={18} />
             <span className="text-gray-500">Search recipes...</span>
           </div>
-          {loading ? "" : token ? (
+          {loading ? (
+            ""
+          ) : token ? (
             <ProfileMenu user={{ name: "John Doe", avatar: "https://via.placeholder.com/150" }} />
           ) : (
             <Button variant="default" className="w-full">
