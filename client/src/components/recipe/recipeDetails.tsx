@@ -24,8 +24,9 @@ type Recipe = {
   preparationSteps?: { stepNo: number; stepDescription: string }[];
 };
 
-const RecipeDetails = ({ recipe }: { recipe: Recipe }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+const RecipeDetails = ({ recipe }: { recipe: any }) => {
+  const [isFavorite, setIsFavorite] = useState(recipe?.isSaved||false);
+  console.log("rec---", recipe)
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
@@ -62,7 +63,7 @@ const RecipeDetails = ({ recipe }: { recipe: Recipe }) => {
         <div>
           <h3 className="font-semibold text-sm">Ingredients:</h3>
           <ul className="list-disc ml-4 text-sm">
-            {recipe.recipeIngredients?.map((ing, index) => (
+            {recipe.recipeIngredients?.map((ing:any, index:any) => (
               <li key={index}>{ing.ingredient.name}</li>
             ))}
           </ul>
@@ -73,7 +74,7 @@ const RecipeDetails = ({ recipe }: { recipe: Recipe }) => {
           <details className="mt-2">
             <summary className="text-blue-500 cursor-pointer">View Steps</summary>
             <ul className="mt-2 list-decimal ml-4 text-sm">
-              {recipe.preparationSteps.map((step) => (
+              {recipe.preparationSteps.map((step:any) => (
                 <li key={step.stepNo}>{step.stepDescription}</li>
               ))}
             </ul>

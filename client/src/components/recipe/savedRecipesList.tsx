@@ -6,6 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import RecipeDetails from "./recipeDetails";
+import { useRecipe } from "@/providers/RecipeContext";
+import { useUser } from "@/providers/UserContext";
 
 type Recipe = {
   id: string;
@@ -15,14 +17,19 @@ type Recipe = {
   averageRating?: number;
 };
 
-const savedRecipesList = ({ recipes }: { recipes: Recipe[] }) => {
+const SavedRecipesList = () => {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
-  const totalPages = Math.ceil(recipes.length / pageSize);
-  const paginatedRecipes = recipes.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const {savedRecipes} = useUser();
+  const recipes=savedRecipes;
+  const totalPages = Math.ceil(recipes?.length / pageSize);
+  const paginatedRecipes = recipes?.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  console.log("selectedRecipe---",selectedRecipe);
+  console.log("recipes---",recipes);
+  
   return (
     <div className="w-full max-w-3xl mx-auto mt-8">
       {/* Show full recipe when selected */}
@@ -37,33 +44,33 @@ const savedRecipesList = ({ recipes }: { recipes: Recipe[] }) => {
         <>
           <h2 className="text-2xl font-bold text-center mb-4">Search Results</h2>
 
-          {paginatedRecipes.length === 0 ? (
+          {paginatedRecipes?.length === 0 ? (
             <p className="text-center text-gray-500">No recipes found.</p>
           ) : (
             <div className="space-y-4">
-              {paginatedRecipes.map((recipe) => (
-                <Card key={recipe.id} className="shadow-lg">
+              {paginatedRecipes?.map((sr:any) => (
+                <Card key={sr?.recipe?.id} className="shadow-lg">
                   <CardHeader>
-                    <CardTitle>{recipe.title}</CardTitle>
+                    <CardTitle>{sr?.recipe?.title}</CardTitle>
                   </CardHeader>
 
                   <CardContent>
-                    <p className="text-sm text-gray-600">{recipe.description}</p>
+                    <p className="text-sm text-gray-600">{sr?.recipe?.description}</p>
 
                     {/* Ingredients Preview */}
                     <p className="text-xs text-gray-500 mt-2">
                       <strong>Ingredients:</strong>{" "}
-                      {recipe.recipeIngredients?.map((ing) => ing.ingredient.name).join(", ")}
+                      {sr?.recipe?.recipeIngredients?.map((ing:any) => ing?.ingredient?.name).join(", ")}
                     </p>
 
                     {/* Rating */}
                     <div className="mt-2 flex items-center justify-between">
                       <Badge variant="outline">
-                        ⭐ {recipe.averageRating ? recipe.averageRating.toFixed(1) : "N/A"}
+                        ⭐ {sr?.recipe?.averageRating ? sr?.recipe?.averageRating.toFixed(1) : "N/A"}
                       </Badge>
 
                       {/* View Recipe Button */}
-                      <Button size="sm" onClick={() => setSelectedRecipe(recipe)}>
+                      <Button size="sm" onClick={() => setSelectedRecipe(sr?.recipe)}>
                         View Recipe
                       </Button>
                     </div>
@@ -103,4 +110,4 @@ const savedRecipesList = ({ recipes }: { recipes: Recipe[] }) => {
   );
 };
 
-export default savedRecipesList;
+export default SavedRecipesList;

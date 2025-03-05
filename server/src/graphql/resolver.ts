@@ -18,13 +18,33 @@ export const resolvers = {
         throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
       }
     },
-    searchRecipesByIngredients: async (_: any, { input }: { input: { ingredients?: string[], title?: string, page?: number, pageSize?: number } }) => {
+    getRecipes: async (_: any, { input }: { input: { ingredients?: string[]; title?: string; page?: number; pageSize?: number } }, context: any) => {
       try {
-        const {ingredients, title, page, pageSize} =input;
-        const recipes = await dbService.Receipe.searchRecipesByIngredients(ingredients, title, page, pageSize);
+        const authenticatedUser: { userId: number } = context.user;
+        const { ingredients, title, page, pageSize } = input;
+        const recipes = await dbService.Receipe.getRecipes(ingredients, title, page, pageSize, authenticatedUser?.userId);
         console.log("recipes-->", recipes);
         // return "success fetching recipes by ingredients";
         return recipes;
+      } catch (error: any) {
+        throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
+      }
+    },
+    getRecipeData: async (_: any, { recipeId }: { recipeId: number }, context: any) => {
+      try {
+        const authenticatedUser: { userId: number } = context.user;
+        const recipe = await dbService.Receipe.getRecipeById(recipeId, authenticatedUser?.userId);
+        console.log("recipe-->", recipe);
+        // return "success fetching recipe by ingredients";
+        return recipe;
+      } catch (error: any) {
+        throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
+      }
+    },
+    getAllIngredients: async () => {
+      try {
+        const ingredients = await dbService.Receipe.getAllIngredients();
+        return ingredients;
       } catch (error: any) {
         throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
       }
@@ -64,8 +84,19 @@ export const resolvers = {
     addNewRecipe: async (_: any, { recipeData, ingredientsUsed, preparationStepsIncluded }: { recipeData: NewRecipeDTO; ingredientsUsed: IngredientUsageDTO[]; preparationStepsIncluded: PreparationStepDTO[] }, context: any) => {
       try {
         const recipe = await dbService.Receipe.addNewRecipe(recipeData, ingredientsUsed, preparationStepsIncluded);
-        console.dir(recipe,{depth: null});
+        console.dir(recipe, { depth: null });
         return "success adding recipe";
+      } catch (error: any) {
+        throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
+      }
+    },
+
+    saveRecipe: async (_: any, { recipeId }: { recipeId: number }, context: any) => {
+      try {
+        const authenticatedUser: { userId: number } = isAuthenticated(context);
+        const recipe = await dbService.Receipe.saveRecipe(authenticatedUser.userId, recipeId);
+        console.dir(recipe, { depth: null });
+        return "success saving recipe";
       } catch (error: any) {
         throw new ApolloError(error.message || "An unexpected error occurred", error.code || "INTERNAL_ERROR");
       }

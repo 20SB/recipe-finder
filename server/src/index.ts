@@ -16,7 +16,7 @@ const server = new ApolloServer({
       return {};
     }
     const token = req.headers.authorization?.replace("Bearer ", "");
-    if (!token) {
+    if (!token || token == "Bearer" || token=="null" || token == "undefined") {
       return { user: null };
     }
     try {

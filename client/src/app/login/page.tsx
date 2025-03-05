@@ -14,13 +14,14 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { request, gql } from "graphql-request";
 import { setToken } from "@/lib/auth";
+import { useUser } from "@/providers/UserContext";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;
 
 const LOGIN_MUTATION = gql`
   mutation LoginUser($userInput: loginUserInput!) {
@@ -36,8 +37,8 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
+  const { login } = useUser();
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -49,25 +50,10 @@ const Login = () => {
 
   const handleLogin = async (data: LoginFormData) => {
     try {
-      const response: any = await request("http://localhost:4000/api/graphql", LOGIN_MUTATION, {
-        userInput: {
-          email: data.email,
-          password: data.password,
-        },
-      });
-
-      console.log("login successful:", response);
-      // Handle storing token and redirecting the user
-
-      if (response.loginUser?.token) {
-        setToken(response.loginUser?.token, 24);
-        router.push("/");
-      } else {
-        alert("Invalid credentials");
-      }
+      await login(data)
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again.");
+      alert("Something went wrong. Please try a gain.");
     }
   };
 

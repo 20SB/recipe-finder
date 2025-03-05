@@ -6,31 +6,28 @@ import { Search as LucideSearch, Menu as LucideMenu, X as LucideX } from "lucide
 import SearchModal from "./SearchModal";
 import ProfileMenu from "./profileMenu";
 import Link from "next/link";
-import { getToken } from "@/lib/auth";
-import { fetchUserDataById } from "@/graphQlQueries/method";
+import { useUser } from "@/providers/UserContext";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // State to manage loading state
-  const [user, setUser] = useState<{ name: string; avatar: string } | null>(null);
-  const [savedRecipes, setSavedRecipes] = useState([]);
 
-  useEffect(() => {
-    const token = getToken();
-    setToken(token);
-    if (token) {
-      fetchUserDataById(token, null).then((userData) => {
-        console.log("userData------:", userData);
-        setUser(userData.user);
-        setSavedRecipes(userData.savedRecipes);
-        setLoading(false);
-      });
-    } else {
-      setLoading(false);
-    }
-  }, []);
+  const { user, savedRecipes, loading, logout } = useUser();
+
+  // useEffect(() => {
+  //   const token = getToken();
+  //   setToken(token);
+  //   if (token) {
+  //     fetchUserDataById(token, null).then((userData) => {
+  //       console.log("userData------:", userData);
+  //       setUser(userData.user);
+  //       setSavedRecipes(userData.savedRecipes);
+  //       setLoading(false);
+  //     });
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // }, []);
 
   console.log("user:", user);
   console.log("savedRecipes:", savedRecipes);
@@ -59,8 +56,8 @@ const Navbar = () => {
       <div className="hidden lg:flex items-center gap-4">
         {loading ? (
           ""
-        ) : token ? (
-          <ProfileMenu user={{ name: "John Doe", avatar: "https://via.placeholder.com/150" }} />
+        ) : user ? (
+          <ProfileMenu />
         ) : (
           <Button variant="default">
             <Link href="/login">Login</Link>
@@ -77,8 +74,8 @@ const Navbar = () => {
           </div>
           {loading ? (
             ""
-          ) : token ? (
-            <ProfileMenu user={{ name: "John Doe", avatar: "https://via.placeholder.com/150" }} />
+          ) : user ? (
+            <ProfileMenu />
           ) : (
             <Button variant="default" className="w-full">
               <Link href="/login">Login</Link>

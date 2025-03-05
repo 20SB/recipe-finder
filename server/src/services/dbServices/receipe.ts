@@ -28,7 +28,14 @@ export default class Receipe {
               updatedAt: true,
             },
             extras: {
-              averageRating: sql<number>`(SELECT AVG(rating) FROM reviews WHERE recipe_id = ${recipes.id})`.as("average_rating"),
+              averageRating: sql<number>`
+                COALESCE((SELECT AVG(rating) FROM reviews WHERE recipe_id = ${recipes.id}),0)
+              `.as("average_rating"),
+              isSaved: sql<boolean>`EXISTS (
+                SELECT 1 FROM saved_recipes
+                WHERE saved_recipes.recipe_id = ${recipes.id}
+                AND saved_recipes.user_id = ${userId || null}
+              )`.as("is_saved"),
             },
             with: {
               createdByUser: {
@@ -187,9 +194,18 @@ export default class Receipe {
     }
   };
 
-  static searchRecipesByIngredients = async (ingredientNames?: string[], title?: string, page?: number, pageSize?: number) => {
+  static getAllIngredients = async () => {
     try {
-      const offset = ((page||1) - 1) * (pageSize||10);
+      const recipes = await postgresdb.query.ingredients.findMany();
+      return recipes;
+    } catch (error: any) {
+      throw new Error(`Error fetching all Receipes: ${error.message}`);
+    }
+  };
+
+  static getRecipes = async (ingredientNames?: string[], title?: string, page?: number, pageSize?: number, userId?: number) => {
+    try {
+      const offset = ((page || 1) - 1) * (pageSize || 10);
       const ingredientConditions = ingredientNames?.map((name) => ilike(ingredients.name, sql`'%' || ${name} || '%'`));
       const titleCondition = title ? ilike(recipes.title, sql`'%' || ${title} || '%'`) : undefined;
       let whereConditions: any[] = [];
@@ -254,6 +270,11 @@ export default class Receipe {
               )
             ) / NULLIF(${ingredientNames?.length || 0}, 0) * 100, 2)
           `.as("match_percentage"),
+          isSaved: sql<boolean>`EXISTS (
+            SELECT 1 FROM saved_recipes
+            WHERE saved_recipes.recipe_id = ${recipes.id}
+            AND saved_recipes.user_id = ${userId || null}
+          )`.as("is_saved"),
         },
         with: {
           createdByUser: {
@@ -320,7 +341,7 @@ export default class Receipe {
           },
         },
         where: whereClause,
-        orderBy: sql`match_percentage DESC`,
+        orderBy: sql`match_percentage DESC, average_rating DESC`,
         limit: pageSize,
         offset: offset,
       });
@@ -329,6 +350,133 @@ export default class Receipe {
     } catch (error: any) {
       console.log("ERROR---", error);
       throw new Error(`Error searching recipes by ingredients: ${error.message}`);
+    }
+  };
+
+  static getRecipeById = async (recipeId: number, userId?: number) => {
+    try {
+
+      const matchingRecipe = await postgresdb.query.recipes.findMany({
+        where:eq(recipes.id, recipeId),
+        columns: {
+          id: true,
+          title: true,
+          description: true,
+          imageUrl: true,
+          cuisineType: true,
+          preparationTime: true,
+          cookingMethod: true,
+          difficultyLevel: true,
+          calorieCount: true,
+          source: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        extras: {
+          averageRating: sql<number>`
+            COALESCE((SELECT AVG(rating) FROM reviews WHERE recipe_id = ${recipes.id}),0)
+          `.as("average_rating"),
+          isSaved: sql<boolean>`EXISTS (
+            SELECT 1 FROM saved_recipes
+            WHERE saved_recipes.recipe_id = ${recipes.id}
+            AND saved_recipes.user_id = ${userId || null}
+          )`.as("is_saved"),
+        },
+        with: {
+          createdByUser: {
+            columns: {
+              name: true,
+              email: true,
+              avatar: true,
+            },
+          },
+          recipeIngredients: {
+            columns: {
+              quantity: true,
+              isRequired: true,
+            },
+            with: {
+              ingredient: {
+                columns: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          preparationSteps: {
+            columns: {
+              stepNo: true,
+              stepDescription: true,
+            },
+            with: {
+              ingredientsUsed: {
+                columns: {
+                  quantity: true,
+                  isRequired: true,
+                },
+                with: {
+                  ingredient: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: asc(preparationSteps.stepNo),
+          },
+          reviews: {
+            columns: {
+              rating: true,
+              reviewText: true,
+              createdAt: true,
+            },
+            with: {
+              reviewer: {
+                columns: {
+                  name: true,
+                  email: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
+        }
+      });
+
+      return matchingRecipe[0];
+    } catch (error: any) {
+      console.log("ERROR---", error);
+      throw new Error(`Error searching recipes by ingredients: ${error.message}`);
+    }
+  };
+
+  static saveRecipe = async (userId: number, recipeId: number) => {
+    try {
+      // first check for combination
+      const alreadysavedRecipe = await postgresdb.query.savedRecipes.findMany({
+        columns: {
+          id: true,
+          userId: true,
+          recipeId: true,
+        },
+        where: and(eq(savedRecipes.userId, userId), eq(savedRecipes.recipeId, recipeId)),
+      });
+
+      if (alreadysavedRecipe.length) {
+        throw new Error("Recipe is already saved");
+      }
+
+      await postgresdb.insert(savedRecipes).values({
+        userId: userId,
+        recipeId: recipeId,
+      });
+    } catch (error: any) {
+      throw new Error(`Error saving Recipe: ${error.message}`);
     }
   };
 }
