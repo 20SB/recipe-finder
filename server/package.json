@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prod": "npm run build && npm run start",
     "dev": "nodemon --exec ts-node src/index.ts",
     "migration:generate": "drizzle-kit generate",
     "migration:push": "node -r esbuild-register src/config/migrate.ts",
     "migration:drop": "drizzle-kit drop",
     "drizzle:studio": "npx drizzle-kit studio",
-    "dbml": "tsx ./src/config/dbml.ts"  
+    "dbml": "tsx ./src/config/dbml.ts"
   },
   "keywords": [],
   "author": "",
